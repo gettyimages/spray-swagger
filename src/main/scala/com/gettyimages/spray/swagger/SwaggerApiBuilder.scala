@@ -40,13 +40,13 @@ class SwaggerApiBuilder(
   
   implicit val mirror = runtimeMirror(getClass.getClassLoader)
   
-  private val modelJsonMap = (new SwaggerModelBuilder(modelTypes)).buildAll
+  private val modelJsonMap = collection.mutable.Map(new SwaggerModelBuilder(modelTypes).buildAll.toSeq: _*)
   
   logger.debug(s"ModelJsonMap: $modelJsonMap")
   
   val swaggerApiAnnotations = apiTypes.map(apiType => getClassAnnotation[Api](apiType) match {
     case Some(annotation) if !(apiType  <:< typeOf[HttpService]) => 
-      throw new IllegalArgumentException(s"Class must mix with HttpServie")
+      throw new IllegalArgumentException(s"Class must mix with HttpService")
     case Some(annotation) => (annotation, apiType)
     case None => throw new IllegalArgumentException(s"Class must have Api annotation: $apiType")
   })
@@ -71,7 +71,7 @@ class SwaggerApiBuilder(
   ): Seq[(ListApi, Type)] = for {
     (apiAnnotation, classType) <- swaggerApiAnnotations 
     apiPath <- getStringJavaAnnotation("value", apiAnnotation).orElse(
-        throw new ApiMissingPropertyException(s"Missing name, $apiAnnotation"))
+        throw new ApiMissingPropertyException(s"value must be defined for $apiAnnotation"))
   } yield {
     (ListApi(apiPath, getStringJavaAnnotation("description", apiAnnotation), None), classType) 
   }
@@ -80,7 +80,7 @@ class SwaggerApiBuilder(
     for { 
       responsesAnnotation <- getMethodAnnotation[ApiResponses](classType, termSymbol)
       responseAnnotations <- getArrayJavaAnnotation("value", responsesAnnotation).map(_.toList).orElse(
-        throw new ApiMissingPropertyException(s"Missing value, $responsesAnnotation"))
+        throw new ApiMissingPropertyException(s"value must be defined for $responsesAnnotation"))
     } yield { responseAnnotations.map(responseAnnotation => {
       val code = getIntJavaAnnotation("code", responseAnnotation)
       val message = getStringJavaAnnotation("message", responseAnnotation)
@@ -142,9 +142,8 @@ class SwaggerApiBuilder(
      )
   }
   
-  val SwaggerTypes = List(
-      "Byte", "Boolean", "Int", "Long", "Float", "Double", "String", "Date",
-      "List", "Set", "Array")
+  val SwaggerTypes =
+    Set("int", "long", "float", "double", "string", "byte", "boolean", "Date", "date", "date-time", "array")
   
   private def findDependentModels(responseClass: String): Map[String, Model] = {
     var models = Map[String, Model]()
@@ -163,7 +162,7 @@ class SwaggerApiBuilder(
     var updatedModels = models
     //Get property based models
     model.properties.values.filter(
-      prop => !SwaggerTypes.contains(prop.`type`) && !models.contains(prop.`type`)
+      prop => !SwaggerTypes.contains(prop.`type`) && !models.contains(prop.`type`) && modelJsonMap.contains(prop.`type`)
     ).foreach(complexProp =>{
       updatedModels += complexProp.`type` -> modelJsonMap(complexProp.`type`)
       updatedModels ++= findDependentModelsRecursively(modelJsonMap(complexProp.`type`), updatedModels)
@@ -178,8 +177,10 @@ class SwaggerApiBuilder(
     modelJsonMap.values.filter(m => {
       m.`extends`.exists(e => e == model.id) && !models.contains(m.id)
     }).foreach(m => {
-      updatedModels += m.id -> m
       updatedModels ++= findDependentModelsRecursively(m, updatedModels)
+      val updatedM = m.copy(properties = m.properties ++ updatedModels(m.`extends`.get).properties)
+      updatedModels += m.id -> updatedM
+      modelJsonMap.put(m.id, updatedM)
     })
     updatedModels
   }
@@ -209,7 +210,7 @@ class SwaggerApiBuilder(
           case None =>
             val fullPath = getPath(pathAnnotation, path, path)
             (fullPath, List[Parameter]())
-         }
+        }
       case None => 
         val fullPath = getPath(pathAnnotation, path, path)
         (fullPath, List[Parameter]())
