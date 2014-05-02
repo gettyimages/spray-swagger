@@ -62,8 +62,8 @@ case class Model(id: String,
 }
 
 case class ModelProperty(
-                  description: String,
                   `type`: String,
+                  description: Option[String] = None,
                   defaultValue: Option[String] = None,
                   enum: Option[Set[String]] = None,
                   required: Boolean = true,

@@ -44,7 +44,7 @@ class SwaggerModelBuilder(modelTypes: Seq[Type])(implicit mirror: Mirror) extend
     val extendedName = getExtendedClassName(modelType, modelAnnotation)
     val subTypes = getSubTypes(modelType, modelAnnotation)
     val modelProperties = (for((annotation, symbol) <- fieldAnnotationSymbols) yield {
-      val description = getStringJavaAnnotation("value", annotation).get
+      val description = getStringJavaAnnotation("value", annotation)
       val dataType = getStringJavaAnnotation("dataType", annotation)
       val propertyName = symbol.name.decoded.trim
       val optionType = extractOptionType(symbol)

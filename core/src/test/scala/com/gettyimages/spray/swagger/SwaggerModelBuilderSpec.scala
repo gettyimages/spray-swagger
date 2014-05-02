@@ -129,7 +129,7 @@ class SwaggerModelBuilderSpec extends WordSpec with ShouldMatchers {
   private def checkProperty(modelKey: String, description: String, `type`: String)(implicit model: Model) {
     model.properties should contain key modelKey
     val prop = model.properties(modelKey)
-    prop.description should equal (description)
+    prop.description should equal (Some(description))
     prop.`type` should equal (`type`)
   }
 

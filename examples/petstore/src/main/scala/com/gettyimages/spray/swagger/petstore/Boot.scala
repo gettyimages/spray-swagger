@@ -9,5 +9,5 @@ object Boot extends App {
 
   val petstore = system.actorOf(Props[PetstoreServiceActor], "petstore-http-actor")
 
-  IO(Http) ! Http.Bind(petstore, "localhost", port = 8080)
+  IO(Http) ! Http.Bind(petstore, "localhost", port = 8081)
 }

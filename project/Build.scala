@@ -17,14 +17,14 @@ object SpraySwaggerBuild extends Build {
     settings = Project.defaultSettings ++ releaseSettings ++ Seq(
       organization := "com.gettyimages",
       name := "spray-swagger",
-      scalaVersion := "2.10.3",
+      scalaVersion := "2.10.4",
       libraryDependencies ++= Seq(
-        "org.scalatest" %% "scalatest" % "2.1.0" % "test",
+        "org.scalatest" %% "scalatest" % "2.1.5" % "test",
         "com.wordnik" %% "swagger-core" % "1.3.2",
         "com.typesafe" %% "scalalogging-slf4j" % "1.0.1",
-        "com.typesafe.akka" %% "akka-actor" % "2.3.0",
+        "com.typesafe.akka" %% "akka-actor" % "2.3.2",
         "org.json4s" %% "json4s-jackson" % "3.2.4",
-        "io.spray" % "spray-routing" % "1.3.0",
+        "io.spray" % "spray-routing" % "1.3.1",
         "joda-time" % "joda-time" % "2.2",
         "org.joda" % "joda-convert" % "1.3.1"
       ),
