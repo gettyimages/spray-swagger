@@ -9,8 +9,8 @@ scalaVersion := "2.11.2"
 crossScalaVersions := Seq("2.10.4", "2.11.2")
 
 libraryDependencies ++= Seq(
-  "io.spray" %% "spray-routing" % "1.3.1",
-  "io.spray" %% "spray-testkit" % "1.3.1" % "test",
+  "io.spray" %% "spray-routing-shapeless2" % "1.3.2",
+  "io.spray" %% "spray-testkit" % "1.3.2" % "test",
   "org.scalatest" %% "scalatest" % "2.2.0" % "test" ,
   "com.wordnik" %% "swagger-core" % "1.3.10" excludeAll( ExclusionRule(organization = "org.json4s"),  ExclusionRule(organization="org.fasterxml*") ),
   "com.typesafe.akka" %% "akka-actor" % "2.3.3",
