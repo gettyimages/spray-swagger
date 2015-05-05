@@ -1,12 +1,24 @@
-package com.gettyimages.spray.swagger
+package com.tecsisa.akka.http.swagger.samples
 
+import akka.actor.{Actor, ActorSystem}
+import akka.http.server.Directives
+import akka.stream.scaladsl.ImplicitFlowMaterializer
+import com.tecsisa.akka.http.swagger.utils.JsonMarshalling
 import com.wordnik.swagger.annotations._
-import javax.ws.rs.Path
-import spray.routing.HttpService
-import spray.httpx.Json4sSupport
+import com.wordnik.swagger.core.util.JsonSerializer
+
+import scala.concurrent.ExecutionContextExecutor
+
 
 @Api(value = "/dict", description = "This is a dictionary api.")
-trait DictHttpService extends HttpService with Json4sSupport {
+trait DictHttpService {
+  _: Actor with ImplicitFlowMaterializer with Directives
+    with JsonMarshalling =>
+
+  implicit val system: ActorSystem
+  implicit def executor: ExecutionContextExecutor
+
+  implicit val formats = org.json4s.DefaultFormats
 
   var dict: Map[String, String] = Map[String, String]()
 
@@ -37,6 +49,15 @@ trait DictHttpService extends HttpService with Json4sSupport {
     path("/dict" / Segment) { key =>
       complete(dict(key))
     }
+  }
+
+  def toJsonString(data: Any): String = {
+    if (data.getClass.equals(classOf[String])) {
+      data.asInstanceOf[String]
+    } else {
+      JsonSerializer.asJson(data.asInstanceOf[AnyRef])
+    }
+
   }
 
 }

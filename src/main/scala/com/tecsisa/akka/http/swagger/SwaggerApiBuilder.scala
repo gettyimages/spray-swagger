@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-package com.gettyimages.spray.swagger
+package com.tecsisa.akka.http.swagger
 
-import com.wordnik.swagger.config._
-import com.wordnik.swagger.reader._
-import com.wordnik.swagger.core.util.ReaderUtil
 import com.typesafe.scalalogging.LazyLogging
+import com.wordnik.swagger.config._
+import com.wordnik.swagger.core.util.ReaderUtil
 import com.wordnik.swagger.model._
+
 import scala.reflect.runtime.universe._
-import com.wordnik.swagger.converter.ModelConverters
-import com.wordnik.swagger.core.SwaggerContext
 
 class SwaggerApiBuilder(
   config: SwaggerConfig,
   apiTypes: Seq[Type]
 ) extends ReaderUtil
-    with LazyLogging {
+with LazyLogging {
 
-  val scanner = new SprayApiScanner(apiTypes)
-  val reader = new SprayApiReader()
+  val scanner = new AkkaHttpApiScanner(apiTypes)
+  val reader = new AkkaHttpApiReader()
 
   val listings: Map[String, ApiListing] = {
     logger.info("loading api metadata")

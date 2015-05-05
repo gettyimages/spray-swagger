@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Getty Imges, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,30 +11,30 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.gettyimages.spray.swagger
+ * limitations under the License.*/
+package com.tecsisa.akka.http.swagger
 
-import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.WordSpec
-import com.wordnik.swagger.core.{ SwaggerSpec, SwaggerContext }
+import com.tecsisa.akka.http.swagger.samples.{DictHttpService, TestApiWithNoAnnotation}
 import com.wordnik.swagger.config._
+import com.wordnik.swagger.core.SwaggerContext
+import org.scalatest.{Matchers, WordSpec}
+
 import scala.reflect.runtime.universe._
 
-class SprayApiReaderSpec
+class AkkaHttpApiReaderSpec
     extends WordSpec
-    with ShouldMatchers {
+    with Matchers {
 
   val SWAGGER_VERSION = "1.2"
   val API_VERSION = "1.0"
   val BASE_PATH = "http://www.example-foo.com"
 
-  val reader = new SprayApiReader()
+  val reader = new AkkaHttpApiReader()
   def readType(t: Type) = {
     reader.read("", SwaggerContext.loadClass(t.toString), new SwaggerConfig(API_VERSION, SWAGGER_VERSION, BASE_PATH, ""))
   }
 
-  "The SprayApiReader object" when {
+  "The AkkaHttpApiReader object" when {
     "passed an api with no annotation" should {
       "throw an IllegalArgumentException" in {
         intercept[IllegalArgumentException] {

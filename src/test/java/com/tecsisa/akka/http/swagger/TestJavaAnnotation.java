@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.gettyimages.spray.swagger;
+package com.tecsisa.akka.http.swagger;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.gettyimages.spray.swagger
+package com.tecsisa.akka.http.swagger
+
+import com.typesafe.scalalogging.LazyLogging
+import com.wordnik.swagger.annotations.Api
+import com.wordnik.swagger.config._
+import com.wordnik.swagger.core.SwaggerContext
 
 import scala.reflect.runtime.universe._
-import com.wordnik.swagger.annotations.Api
-import com.wordnik.swagger.core.SwaggerContext
-import com.wordnik.swagger.config._
-import com.typesafe.scalalogging.LazyLogging
-import spray.routing.HttpService
 
-class SprayApiScanner(apiTypes: Seq[Type])
-    extends Scanner
-    with LazyLogging {
+
+class AkkaHttpApiScanner(apiTypes: Seq[Type])
+  extends Scanner
+  with LazyLogging {
   def classes(): List[Class[_]] = {
 
-    apiTypes.map(apiType => if (!(apiType <:< typeOf[HttpService])) logger.warn(s"ApiType $apiType does not implement HttpService"))
+    // TODO REVIEW!!
+    //apiTypes.map(apiType => if (!(apiType <:< typeOf[HttpService])) logger.warn(s"ApiType $apiType does not implement HttpService"))
 
     apiTypes.collect {
       case api if {

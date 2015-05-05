@@ -11,19 +11,19 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.gettyimages.spray.swagger
+ * limitations under the License.*/
+package com.tecsisa.akka.http.swagger
 
-import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.WordSpec
-import scala.reflect.runtime.universe._
+import com.tecsisa.akka.http.swagger.samples._
 import com.wordnik.swagger.config._
 import com.wordnik.swagger.core._
+import org.scalatest.{Matchers, WordSpec}
+
+import scala.reflect.runtime.universe._
 
 class SwaggerApiBuilderSpec
   extends WordSpec
-  with ShouldMatchers {
+  with Matchers {
 
   val apiTypes = Seq(typeOf[PetHttpService], typeOf[UserHttpService])
   val config = new SwaggerConfig("myVersion", SwaggerSpec.version, "http://example.com", "")
@@ -125,3 +125,4 @@ class SwaggerApiBuilderSpec
       }
     }
   }
+

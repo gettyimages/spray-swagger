@@ -13,15 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.gettyimages.spray.swagger
+package com.tecsisa.akka.http.swagger.samples
 
+import akka.actor.{ActorSystem, Actor}
+import akka.http.server.Directives
+import akka.stream.scaladsl.ImplicitFlowMaterializer
+import com.tecsisa.akka.http.swagger.utils.JsonMarshalling
 import com.wordnik.swagger.annotations._
-import javax.ws.rs.Path
-import spray.routing.HttpService
-import spray.httpx.Json4sSupport
+
+import scala.concurrent.ExecutionContextExecutor
+
 
 @Api(value = "/user", description = "Operations about users.", produces="application/json")
-trait UserHttpService extends HttpService with Json4sSupport {
+trait UserHttpService {
+  _: Actor with ImplicitFlowMaterializer with Directives
+    with JsonMarshalling =>
+
+  implicit val system: ActorSystem
+  implicit def executor: ExecutionContextExecutor
 
   @ApiOperation(value = "Updated user", notes = "This can only be done by the logged in user.", nickname = "updateUser", httpMethod = "PUT")
   @ApiImplicitParams(Array(

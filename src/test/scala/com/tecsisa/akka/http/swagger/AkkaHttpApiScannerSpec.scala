@@ -11,29 +11,28 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.gettyimages.spray.swagger
+ * limitations under the License.*/
+package com.tecsisa.akka.http.swagger
 
-import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.WordSpec
-import com.wordnik.swagger.core.{SwaggerSpec, SwaggerContext}
-import com.wordnik.swagger.config.SwaggerConfig
+import com.tecsisa.akka.http.swagger.samples.{TestApiWithOnlyDataType, TestApiWithPathOperation}
+import com.wordnik.swagger.core.SwaggerContext
+import org.scalatest.{Matchers, WordSpec}
+
 import scala.reflect.runtime.universe._
 
-class SprayApiScannerSpec
+class AkkaHttpApiScannerSpec
   extends WordSpec
-  with ShouldMatchers {
+  with Matchers {
 
-  "The SprayApiScanner object" when {
+  "The AkkaHttpApiScanner object" when {
     "listing resources" should {
       "identify correct API classes based on type and API annotations" in {
-        val classes = new SprayApiScanner(Seq(typeOf[TestApiWithPathOperation], typeOf[TestApiWithOnlyDataType])).classes
+        val classes = new AkkaHttpApiScanner(Seq(typeOf[TestApiWithPathOperation], typeOf[TestApiWithOnlyDataType])).classes
         classes.length shouldEqual (2)
-        classes.find(clazz => clazz == SwaggerContext.loadClass("com.gettyimages.spray.swagger.TestApiWithPathOperation")).nonEmpty shouldBe (true)
-        classes.find(clazz => clazz == SwaggerContext.loadClass("com.gettyimages.spray.swagger.TestApiWithOnlyDataType")).nonEmpty shouldBe (true)
-
+        classes.find(clazz => clazz == SwaggerContext.loadClass("com.tecsisa.akka.http.swagger.samples.TestApiWithPathOperation")).nonEmpty shouldBe (true)
+        classes.find(clazz => clazz == SwaggerContext.loadClass("com.tecsisa.akka.http.swagger.samples.TestApiWithOnlyDataType")).nonEmpty shouldBe (true)
       }
     }
   }
 }
+

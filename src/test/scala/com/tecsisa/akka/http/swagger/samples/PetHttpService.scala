@@ -13,15 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.gettyimages.spray.swagger
+package com.tecsisa.akka.http.swagger.samples
 
+import akka.actor.{Actor, ActorSystem}
+import akka.http.server.Directives
+import akka.stream.scaladsl.ImplicitFlowMaterializer
+import com.tecsisa.akka.http.swagger.utils.JsonMarshalling
 import com.wordnik.swagger.annotations._
-import javax.ws.rs.Path
-import spray.routing.HttpService
-import spray.httpx.Json4sSupport
+
+import scala.concurrent.ExecutionContextExecutor
+
 
 @Api(value = "/pet", description = "Operations about pets.", produces="application/json, application/vnd.test.pet", consumes="application/json, application/vnd.test.pet")
-trait PetHttpService extends HttpService with Json4sSupport {
+trait PetHttpService {
+  _: Actor with ImplicitFlowMaterializer with Directives
+    with JsonMarshalling =>
+
+  implicit val system: ActorSystem
+  implicit def executor: ExecutionContextExecutor
 
 
   @ApiOperation(value = "Find a pet by ID", notes = "Returns a pet based on ID", httpMethod = "GET", response = classOf[Pet])
@@ -70,5 +79,4 @@ trait PetHttpService extends HttpService with Json4sSupport {
   @ApiOperation(value = "Searches for a pet", nickname="searchPet", httpMethod="GET", produces="application/json, application/xml")
   def searchRoute = get { complete("") }
 }
-
 case class Pet(id: Int, name: String, birthDate: java.util.Date)

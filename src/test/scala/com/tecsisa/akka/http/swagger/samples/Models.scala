@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.gettyimages.spray.swagger
+package com.tecsisa.akka.http.swagger.samples
 
 import com.wordnik.swagger.annotations.ApiModelProperty
 import com.wordnik.swagger.annotations.ApiModel

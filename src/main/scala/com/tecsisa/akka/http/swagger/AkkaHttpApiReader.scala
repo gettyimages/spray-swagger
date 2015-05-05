@@ -13,27 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.gettyimages.spray.swagger
+package com.tecsisa.akka.http.swagger
 
 import java.lang.annotation.Annotation
 import java.lang.reflect.Method
 import javax.ws.rs._
-import scala.collection.mutable.ListBuffer
-import scala.reflect.runtime.universe.Type
 
 import com.typesafe.scalalogging.LazyLogging
 import com.wordnik.swagger.annotations._
 import com.wordnik.swagger.config._
 import com.wordnik.swagger.core._
-import com.wordnik.swagger.core.ApiValues._
 import com.wordnik.swagger.core.util._
 import com.wordnik.swagger.model._
 import com.wordnik.swagger.reader._
 
-class SprayApiReader
-    extends ClassReader
-    with ClassReaderUtils
-    with LazyLogging {
+import scala.collection.mutable.ListBuffer
+
+class AkkaHttpApiReader
+  extends ClassReader
+  with ClassReaderUtils
+  with LazyLogging {
 
   def readRecursive(
     docRoot: String,
