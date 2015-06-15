@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.gettyimages.spray.swagger
+package com.gettyimages.akka.swagger
 
 import java.lang.annotation.Annotation
 import java.lang.reflect.Method

@@ -13,25 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.gettyimages.spray.swagger
+package com.gettyimages.akka.swagger
 
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import org.scalatest.WordSpec
-import com.wordnik.swagger.core.{SwaggerSpec, SwaggerContext}
+import com.wordnik.swagger.core.{ SwaggerSpec, SwaggerContext }
+
 import com.wordnik.swagger.config.SwaggerConfig
+
 import scala.reflect.runtime.universe._
 
+import com.gettyimages.akka.swagger.samples._
+
 class SprayApiScannerSpec
-  extends WordSpec
-  with ShouldMatchers {
+    extends WordSpec
+    with Matchers {
 
   "The SprayApiScanner object" when {
     "listing resources" should {
       "identify correct API classes based on type and API annotations" in {
         val classes = new SprayApiScanner(Seq(typeOf[TestApiWithPathOperation], typeOf[TestApiWithOnlyDataType])).classes
         classes.length shouldEqual (2)
-        classes.find(clazz => clazz == SwaggerContext.loadClass("com.gettyimages.spray.swagger.TestApiWithPathOperation")).nonEmpty shouldBe (true)
-        classes.find(clazz => clazz == SwaggerContext.loadClass("com.gettyimages.spray.swagger.TestApiWithOnlyDataType")).nonEmpty shouldBe (true)
+        classes.find(clazz ⇒ clazz == SwaggerContext.loadClass("com.gettyimages.akka.swagger.samples.TestApiWithPathOperation")).nonEmpty shouldBe (true)
+        classes.find(clazz ⇒ clazz == SwaggerContext.loadClass("com.gettyimages.akka.swagger.samples.TestApiWithOnlyDataType")).nonEmpty shouldBe (true)
 
       }
     }

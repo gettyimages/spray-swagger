@@ -14,26 +14,36 @@
  * limitations under the License.
  */
 
-package com.gettyimages.spray.swagger
+package com.gettyimages.akka.swagger
 
 import scala.reflect.runtime.universe.Type
-
 import org.json4s.DefaultFormats
 import org.json4s.Formats
-
 import com.typesafe.scalalogging.LazyLogging
-
-import spray.routing.{ PathMatcher, HttpService, Route }
 import com.wordnik.swagger.model._
 import com.wordnik.swagger.core.util.JsonSerializer
 import com.wordnik.swagger.config.SwaggerConfig
 import com.wordnik.swagger.core.SwaggerSpec
-import spray.http.MediaTypes.`application/json`
-import spray.http.StatusCodes.NotFound
+import akka.http.scaladsl.server.Directives
+import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server._
+import akka.http.scaladsl._
+import akka.http.scaladsl.model.MediaTypes.`application/json`
+import spray.json.pimpString
+import spray.json.DefaultJsonProtocol
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import akka.stream.ActorFlowMaterializer
+import akka.actor.ActorSystem
 
 trait SwaggerHttpService
-    extends HttpService
-    with LazyLogging {
+    extends LazyLogging
+    with Directives
+    with DefaultJsonProtocol
+    with SprayJsonSupport {
+  import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+
+  implicit val actorSystem = ActorSystem("mysystem")
+  implicit val materializer = ActorFlowMaterializer()
 
   def apiTypes: Seq[Type]
 
@@ -53,28 +63,24 @@ trait SwaggerHttpService
         baseUrl,
         "", //api path, baseUrl is used instead
         authorizations, //authorizations
-        apiInfo
-      ), apiTypes
-    )
+        apiInfo), apiTypes)
 
   final def routes: Route =
-    respondWithMediaType(`application/json`) {
-      get {
-        path(docsPath) {
-          complete(toJsonString(api.getResourceListing()))
-        } ~ (
-          (for (
-            (subPath, apiListing) <- api.listings
-          ) yield {
-            path(docsPath / subPath.drop(1).split('/').map(
-              segmentStringToPathMatcher(_)
-            )
-              .reduceLeft(_ / _)) {
-              complete(toJsonString(apiListing))
-            }
-          }).reduceLeft(_ ~ _)
-        )
-      }
+    get {
+      path(docsPath) {
+        complete {
+          toJsonString(api.getResourceListing()).parseJson.asJsObject
+        }
+      } ~ (
+        (for (
+          (subPath, apiListing) ← api.listings
+        ) yield {
+          path(docsPath / subPath.drop(1).split('/').map(
+            segmentStringToPathMatcher(_))
+            .reduceLeft(_ / _)) {
+            complete(toJsonString(apiListing).parseJson.asJsObject)
+          }
+        }).reduceLeft(_ ~ _))
     }
 
   def toJsonString(data: Any): String = {
@@ -83,6 +89,5 @@ trait SwaggerHttpService
     } else {
       JsonSerializer.asJson(data.asInstanceOf[AnyRef])
     }
-
   }
 }

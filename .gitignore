@@ -1,3 +1,5 @@
+.cache-tests
+.cache-main
 .cache
 .classpath
 .project
@@ -6,3 +8,4 @@
 project/target
 target
 tags
+/bin/

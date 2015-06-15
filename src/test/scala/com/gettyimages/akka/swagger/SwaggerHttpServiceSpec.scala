@@ -1,28 +1,28 @@
-package com.gettyimages.spray.swagger
+package com.gettyimages.akka.swagger
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
-import spray.testkit._
+import akka.http.scaladsl.testkit._
 import scala.reflect.runtime.universe._
 import akka.actor.ActorSystem
-import spray.http._
 import org.json4s.jackson.JsonMethods._
 import org.json4s._
+import akka.http.scaladsl.model.ContentTypes
+import com.gettyimages.akka.swagger.samples._
+import org.scalatest.Matchers
 
 class SwaggerHttpServiceSpec
-  extends WordSpec
-  with ShouldMatchers
-  with ScalatestRouteTest {
+    extends WordSpec
+    with Matchers
+    with ScalatestRouteTest {
 
-   val swaggerService = new SwaggerHttpService {
-      override def apiTypes = Seq(typeOf[PetHttpService], typeOf[UserHttpService])
-      override def apiVersion = "2.0"
-      override def baseUrl = "http://some.domain.com/api"
-      override def docsPath = "docs-are-here"
-      override def actorRefFactory = ActorSystem("swagger-spray-test")
-      //apiInfo, not used
-      //authorizations, not used
-   }
+  val swaggerService = new SwaggerHttpService {
+    override def apiTypes = Seq(typeOf[PetHttpService], typeOf[UserHttpService])
+    override def apiVersion = "2.0"
+    override def baseUrl = "http://some.domain.com/api"
+    override def docsPath = "docs-are-here"
+    //apiInfo, not used
+    //authorizations, not used
+  }
 
   implicit val formats = org.json4s.DefaultFormats
 
@@ -37,7 +37,7 @@ class SwaggerHttpServiceSpec
           (response \ "swaggerVersion").extract[String] shouldEqual "1.2"
           val apis = (response \ "apis").extract[Array[JValue]]
           apis.size shouldEqual 2
-          val api = apis.filter(a => (a \ "path").extract[String] == "/pet").head
+          val api = apis.filter(a ⇒ (a \ "path").extract[String] == "/pet").head
           (api \ "description").extract[String] shouldEqual "Operations about pets."
           (api \ "path").extract[String] shouldEqual "/pet"
           //need api info
@@ -55,7 +55,7 @@ class SwaggerHttpServiceSpec
           (response \ "resourcePath").extract[String] shouldEqual "/pet"
           val apis = (response \ "apis").extract[Array[JValue]]
           apis.size shouldEqual 2
-          val api = apis.filter(a => (a \ "path").extract[String] == "/pet/{petId}").head
+          val api = apis.filter(a ⇒ (a \ "path").extract[String] == "/pet/{petId}").head
           (api \ "path").extract[String] shouldEqual "/pet/{petId}"
           val ops = (api \ "operations").extract[Array[JValue]]
           ops.size shouldEqual 3

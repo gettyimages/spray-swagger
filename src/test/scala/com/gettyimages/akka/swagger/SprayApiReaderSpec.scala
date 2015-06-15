@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.gettyimages.spray.swagger
+package com.gettyimages.akka.swagger
 
-import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.WordSpec
 import com.wordnik.swagger.core.{ SwaggerSpec, SwaggerContext }
 import com.wordnik.swagger.config._
 import scala.reflect.runtime.universe._
+import com.gettyimages.akka.swagger.samples._
+import org.scalatest.Matchers
 
 class SprayApiReaderSpec
     extends WordSpec
-    with ShouldMatchers {
+    with Matchers {
 
   val SWAGGER_VERSION = "1.2"
   val API_VERSION = "1.0"

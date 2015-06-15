@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.gettyimages.spray.swagger
+package com.gettyimages.akka.swagger
 
 import com.wordnik.swagger.config._
 import com.wordnik.swagger.reader._
