@@ -20,9 +20,8 @@ import javax.ws.rs.Path
 import akka.http.scaladsl.server.Directives
 import akka.http.scaladsl.server.Directives._
 import spray.json.DefaultJsonProtocol
-import akka.stream.ActorFlowMaterializer
+import akka.stream.ActorMaterializer
 import akka.actor.ActorSystem
-import akka.stream.FlowMaterializer
 
 @Api(value = "/pet", description = "Operations about pets.", produces = "application/json, application/vnd.test.pet", consumes = "application/json, application/vnd.test.pet")
 trait PetHttpService
@@ -31,7 +30,7 @@ trait PetHttpService
     with ModelFormats {
 
   implicit val actorSystem = ActorSystem("mysystem")
-  implicit val materializer = ActorFlowMaterializer()
+  implicit val materializer = ActorMaterializer()
   import actorSystem.dispatcher
 
   @ApiOperation(value = "Find a pet by ID", notes = "Returns a pet based on ID", httpMethod = "GET", response = classOf[Pet])

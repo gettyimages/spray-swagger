@@ -6,7 +6,7 @@ import spray.json._
 import akka.http.scaladsl.server.Directives
 import akka.http.scaladsl.unmarshalling._
 import akka.http.scaladsl.server.directives.MarshallingDirectives
-import akka.stream.ActorFlowMaterializer
+import akka.stream.ActorMaterializer
 import akka.actor.ActorSystem
 
 @Api(value = "/dict", description = "This is a dictionary api.")
@@ -15,7 +15,7 @@ trait DictHttpService
     with ModelFormats {
   import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
   implicit val actorSystem = ActorSystem("mysystem")
-  implicit val materializer = ActorFlowMaterializer()
+  implicit val materializer = ActorMaterializer()
 
   val me = DictEntry("", "", None)
 

@@ -41,8 +41,7 @@ class SprayApiReader
     cls: Class[_],
     config: SwaggerConfig,
     operations: ListBuffer[Tuple3[String, String, ListBuffer[Operation]]],
-    parentMethods: ListBuffer[Method]
-  ): Option[ApiListing] = {
+    parentMethods: ListBuffer[Method]): Option[ApiListing] = {
     Option(cls.getAnnotation(classOf[Api])) match {
       case None ⇒ throw new IllegalArgumentException(s"Class must have Api annotation: @Api")
       case Some(api) ⇒
@@ -50,23 +49,23 @@ class SprayApiReader
           case Some(e) if (e != "") ⇒ e.split(",").map(_.trim).toList
           case _ ⇒ cls.getAnnotation(classOf[Consumes]) match {
             case e: Consumes ⇒ e.value.toList
-            case _ ⇒ List()
+            case _           ⇒ List()
           }
         }
         val produces = Option(api.produces) match {
           case Some(e) if (e != "") ⇒ e.split(",").map(_.trim).toList
           case _ ⇒ cls.getAnnotation(classOf[Produces]) match {
             case e: Produces ⇒ e.value.toList
-            case _ ⇒ List()
+            case _           ⇒ List()
           }
         }
         val protocols = Option(api.protocols) match {
           case Some(e) if (e != "") ⇒ e.split(",").map(_.trim).toList
-          case _ ⇒ List()
+          case _                    ⇒ List()
         }
         val description = api.description match {
           case e: String if (e != "") ⇒ Some(e)
-          case _ ⇒ None
+          case _                      ⇒ None
         }
 
         // define a Map to hold Operations keyed by resourcepath
@@ -77,10 +76,10 @@ class SprayApiReader
               case Some(op) ⇒ {
                 val path = method.getAnnotation(classOf[Path]) match {
                   case e: Path ⇒ e.value()
-                  case _ ⇒ op.parameters.filter(_.paramType == "path").map(_.name).foldLeft("")(_ + "/{" + _ + "}")
+                  case _       ⇒ op.parameters.filter(_.paramType == "path").map(_.name).foldLeft("")(_ + "/{" + _ + "}")
                 }
                 val opWithName = op.nickname match {
-                  case "" ⇒ op.copy(nickname = method.getName)
+                  case ""    ⇒ op.copy(nickname = method.getName)
                   case other ⇒ op
                 }
                 appendOperation(api.value + path, "", opWithName, operations)
@@ -107,8 +106,7 @@ class SprayApiReader
           ApiDescription(
             addLeadingSlash(endpoint),
             None,
-            orderedOperations.toList
-          )
+            orderedOperations.toList)
         }).toList
 
         val models = ModelUtil.modelsFromApis(apis)
@@ -116,8 +114,8 @@ class SprayApiReader
           apiVersion = config.apiVersion,
           swaggerVersion = config.swaggerVersion,
           basePath = api.basePath match {
-            case empty if empty == "" => config.basePath
-            case specified => specified
+            case empty if empty == "" ⇒ config.basePath
+            case specified            ⇒ specified
           },
           resourcePath = addLeadingSlash(api.value),
           apis = ModelUtil.stripPackages(apis),
@@ -126,8 +124,7 @@ class SprayApiReader
           produces = produces,
           consumes = consumes,
           protocols = protocols,
-          position = api.position
-        ))
+          position = api.position))
 
     }
   }
@@ -152,7 +149,7 @@ class SprayApiReader
     val parentPath = {
       Option(cls.getAnnotation(classOf[Path])) match {
         case Some(e) ⇒ e.value()
-        case _ ⇒ ""
+        case _       ⇒ ""
       }
     }
     readRecursive(docRoot, parentPath.replace("//", "/"), cls, config, new ListBuffer[Tuple3[String, String, ListBuffer[Operation]]], new ListBuffer[Method])
@@ -178,16 +175,16 @@ class SprayApiReader
 
       val produces = apiOperation.produces match {
         case e: String if e.trim != "" ⇒ e.split(",").map(_.trim).toList
-        case _ ⇒ List()
+        case _                         ⇒ List()
       }
 
       val consumes = apiOperation.consumes match {
         case e: String if e.trim != "" ⇒ e.split(",").map(_.trim).toList
-        case _ ⇒ List()
+        case _                         ⇒ List()
       }
       val protocols = apiOperation.protocols match {
         case e: String if e.trim != "" ⇒ e.split(",").map(_.trim).toList
-        case _ ⇒ List()
+        case _                         ⇒ List()
       }
       val authorizations: List[com.wordnik.swagger.model.Authorization] = Option(apiOperation.authorizations) match {
         case Some(e) ⇒ (for (a ← e) yield {
@@ -197,7 +194,7 @@ class SprayApiReader
         case _ ⇒ List()
       }
       val responseClass = apiOperation.responseContainer match {
-        case "" ⇒ apiOperation.response.getName
+        case ""        ⇒ apiOperation.response.getName
         case e: String ⇒ "%s[%s]".format(e, apiOperation.response.getName)
       }
 
@@ -224,8 +221,7 @@ class SprayApiReader
         authorizations,
         params ++ implicitParams,
         apiResponses,
-        Option(isDeprecated)
-      ))
+        Option(isDeprecated)))
     } else {
       None
     }
@@ -251,8 +247,7 @@ class SprayApiReader
             param.dataType,
             allowableValues,
             param.paramType,
-            Option(param.access).filter(_.trim.nonEmpty)
-          )
+            Option(param.access).filter(_.trim.nonEmpty))
         }).toList
       }
       case _ ⇒ List()
@@ -287,7 +282,7 @@ class SprayApiReader
 
   def addLeadingSlash(e: String): String = {
     e.startsWith("/") match {
-      case true ⇒ e
+      case true  ⇒ e
       case false ⇒ "/" + e
     }
   }
@@ -307,12 +302,12 @@ class SprayApiReader
           genericParamType.toString match {
             case GenericTypeMapper(container, base) ⇒ {
               val qt = SwaggerTypes(base.split("\\.").last) match {
-                case "object" ⇒ base
+                case "object"  ⇒ base
                 case e: String ⇒ e
               }
               val b = ModelUtil.modelFromString(qt) match {
                 case Some(e) ⇒ e._2.qualifiedType
-                case None ⇒ qt
+                case None    ⇒ qt
               }
               "%s[%s]".format(normalizeContainer(container), b)
             }
@@ -360,8 +355,7 @@ class SprayApiReader
         dataType,
         allowableValues,
         paramType,
-        paramAccess
-      )
+        paramAccess)
     }
   }
   def normalizeContainer(str: String) = {
@@ -374,4 +368,3 @@ class SprayApiReader
   }
 
 }
-

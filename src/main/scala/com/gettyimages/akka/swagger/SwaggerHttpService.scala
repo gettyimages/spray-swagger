@@ -32,8 +32,8 @@ import akka.http.scaladsl.model.MediaTypes.`application/json`
 import spray.json.pimpString
 import spray.json.DefaultJsonProtocol
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.stream.ActorFlowMaterializer
 import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
 
 trait SwaggerHttpService
     extends LazyLogging
@@ -43,7 +43,7 @@ trait SwaggerHttpService
   import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 
   implicit val actorSystem = ActorSystem("mysystem")
-  implicit val materializer = ActorFlowMaterializer()
+  implicit val materializer = ActorMaterializer()
 
   def apiTypes: Seq[Type]
 

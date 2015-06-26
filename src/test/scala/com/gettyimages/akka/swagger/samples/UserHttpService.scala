@@ -20,7 +20,7 @@ import javax.ws.rs.Path
 import akka.http.scaladsl.server.Directives
 import akka.http.scaladsl.server.Directives._
 import spray.json.DefaultJsonProtocol
-import akka.stream.ActorFlowMaterializer
+import akka.stream.ActorMaterializer
 import akka.actor.ActorSystem
 
 @Api(value = "/user", description = "Operations about users.", produces = "application/json")
@@ -28,7 +28,7 @@ trait UserHttpService
     extends Directives
     with ModelFormats {
   implicit val actorSystem = ActorSystem("mysystem")
-  implicit val materializer = ActorFlowMaterializer()
+  implicit val materializer = ActorMaterializer()
   import actorSystem.dispatcher
   @ApiOperation(value = "Updated user", notes = "This can only be done by the logged in user.", nickname = "updateUser", httpMethod = "PUT")
   @ApiImplicitParams(Array(

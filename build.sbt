@@ -6,17 +6,23 @@ name := "akka-http-swagger"
 
 scalaVersion := "2.11.6"
 
+resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+
+resolvers += "Maven" at "https://repo1.maven.org/maven2/"
+
+checksums in update := Nil
+  
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-http-core-experimental" % "1.0-RC3"  withSources(),
-  "com.typesafe.akka" %% "akka-http-spray-json-experimental" % "1.0-RC3"  withSources(),
-  "com.typesafe.akka" %% "akka-http-experimental" % "1.0-RC3"  withSources(),
-  "com.typesafe.akka" %% "akka-http-testkit-experimental" % "1.0-RC3" % "test"  withSources(),
-  "io.spray"           %% "spray-json"       % "1.3.1" withSources(),
+  "com.typesafe.akka" %% "akka-http-core-experimental" % "1.0-RC4"  withSources(),
+  "com.typesafe.akka" %% "akka-http-spray-json-experimental" % "1.0-RC4"  withSources(),
+  "com.typesafe.akka" %% "akka-http-experimental" % "1.0-RC4"  withSources(),
+  "com.typesafe.akka" %% "akka-http-testkit-experimental" % "1.0-RC4" % "test"  withSources(),
+  "io.spray"           %% "spray-json"       % "1.3.2" withSources(),
+  "com.wordnik" %% "swagger-core" % "1.3.12" excludeAll( ExclusionRule(organization = "org.json4s"),  ExclusionRule(organization="org.fasterxml*") ) withSources(),
   "org.scalatest" %% "scalatest" % "2.2.4" % "test" ,
-  "com.wordnik" %% "swagger-core" % "1.3.12" excludeAll( ExclusionRule(organization = "org.json4s"),  ExclusionRule(organization="org.fasterxml*") ),
   "org.json4s" %% "json4s-jackson" % "3.2.11",
   "org.json4s" %% "json4s-native" % "3.2.11",
-  "joda-time" % "joda-time" % "2.7",
+  "joda-time" % "joda-time" % "2.8",
   "org.joda" % "joda-convert" % "1.7",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
   "javax.ws.rs" % "jsr311-api" % "1.1.1"
@@ -69,3 +75,8 @@ pomExtra := (
       <url>http://parascal.com</url>
     </developer>
   </developers>)
+
+publishTo := Some("Artifactory Realm" at "https://artifactory.gluware.com:8443/artifactory/glue-infastructure/")
+
+credentials += Credentials(Path.userHome / ".artifactory_credentials")
+  
