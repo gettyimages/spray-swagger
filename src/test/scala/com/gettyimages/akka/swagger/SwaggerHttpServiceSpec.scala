@@ -1,25 +1,47 @@
 package com.gettyimages.akka.swagger
 
-import org.scalatest.WordSpec
-import akka.http.scaladsl.testkit._
 import scala.reflect.runtime.universe._
-import akka.actor.ActorSystem
-import org.json4s.jackson.JsonMethods._
+
 import org.json4s._
-import akka.http.scaladsl.model.ContentTypes
-import com.gettyimages.akka.swagger.samples._
+import org.json4s.jackson.JsonMethods._
 import org.scalatest.Matchers
+
+import org.scalatest.WordSpec
+
+import com.gettyimages.akka.swagger.samples._
+
+import akka.actor.ActorSystem
+import akka.http._
+import akka.http.scaladsl._
+import akka.http.scaladsl.client._
+import akka.http.scaladsl.client.RequestBuilding._
+import akka.http.scaladsl.marshalling._
+import akka.http.scaladsl.model._
+import akka.http.scaladsl.model.ContentTypes
+import akka.http.scaladsl.model.headers._
+import akka.http.scaladsl.testkit._
+import akka.http.scaladsl.unmarshalling._
+import akka.stream.ActorMaterializer
+import spray.json._
+import spray.json.DefaultJsonProtocol._
+import spray.json.pimpString
 
 class SwaggerHttpServiceSpec
     extends WordSpec
     with Matchers
     with ScalatestRouteTest {
 
-  val swaggerService = new SwaggerHttpService {
-    override def apiTypes = Seq(typeOf[PetHttpService], typeOf[UserHttpService])
-    override def apiVersion = "2.0"
-    override def baseUrl = "http://some.domain.com/api"
-    override def docsPath = "docs-are-here"
+  val myMaterializer = materializer
+
+  val swaggerService = new SwaggerHttpService with HasActorSystem {
+    override implicit val actorSystem: ActorSystem = system
+    override implicit val materializer: ActorMaterializer = myMaterializer
+    override val apiTypes = Seq(typeOf[PetHttpService], typeOf[UserHttpService])
+    override val basePath = "/api"
+    override val host = "http://some.domain.com"
+    //    override def apiVersion = "2.0"
+    //    override def baseUrl = "http://some.domain.com/api"
+    //    override def docsPath = "docs-are-here"
     //apiInfo, not used
     //authorizations, not used
   }
@@ -29,45 +51,16 @@ class SwaggerHttpServiceSpec
   "The SwaggerHttpService" when {
     "accessing the root doc path" should {
       "return the basic set of api info" in {
-        Get("/docs-are-here") ~> swaggerService.routes ~> check {
+        Get("/swagger.json") ~> swaggerService.routes ~> check {
           handled shouldBe true
           contentType shouldBe ContentTypes.`application/json`
-          val response = parse(responseAs[String])
-          (response \ "apiVersion").extract[String] shouldEqual "2.0"
-          (response \ "swaggerVersion").extract[String] shouldEqual "1.2"
-          val apis = (response \ "apis").extract[Array[JValue]]
-          apis.size shouldEqual 2
-          val api = apis.filter(a ⇒ (a \ "path").extract[String] == "/pet").head
-          (api \ "description").extract[String] shouldEqual "Operations about pets."
-          (api \ "path").extract[String] shouldEqual "/pet"
-          //need api info
-        }
-      }
-    }
-    "accessing a sub-resource" should {
-      "return the api description" in {
-        Get("/docs-are-here/pet") ~> swaggerService.routes ~> check {
-          handled shouldBe true
-          contentType shouldBe ContentTypes.`application/json`
-
-          val response = parse(responseAs[String])
-          (response \ "apiVersion").extract[String] shouldEqual "2.0"
-          (response \ "resourcePath").extract[String] shouldEqual "/pet"
-          val apis = (response \ "apis").extract[Array[JValue]]
-          apis.size shouldEqual 2
-          val api = apis.filter(a ⇒ (a \ "path").extract[String] == "/pet/{petId}").head
-          (api \ "path").extract[String] shouldEqual "/pet/{petId}"
-          val ops = (api \ "operations").extract[Array[JValue]]
-          ops.size shouldEqual 3
-          val models = (response \ "models").extract[JObject]
-          val pet = (models \ "Pet").extract[JObject]
-          (pet \ "id").extract[String] shouldEqual "Pet"
-          (pet \ "properties" \ "id" \ "type").extract[String] shouldEqual "integer"
-          (pet \ "properties" \ "id" \ "format").extract[String] shouldEqual "int32"
-          (pet \ "properties" \ "name" \ "type").extract[String] shouldEqual "string"
-          (pet \ "properties" \ "birthDate" \ "type").extract[String] shouldEqual "string"
-          (pet \ "properties" \ "birthDate" \ "format").extract[String] shouldEqual "date-time"
-
+          val str = responseAs[String]
+          val response = parse(str)
+          (response \ "swagger").extract[String] shouldEqual "2.0"
+          val paths = (response \ "paths").extract[JObject]
+          paths.values.size shouldEqual 2
+          val petPath = (paths \ "/pet")
+          (petPath \ "post" \ "summary").extract[String] shouldEqual "Add a new pet to the store"
         }
       }
     }

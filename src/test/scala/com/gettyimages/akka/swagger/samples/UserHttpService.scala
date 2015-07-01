@@ -15,7 +15,7 @@
  */
 package com.gettyimages.akka.swagger.samples
 
-import com.wordnik.swagger.annotations._
+import io.swagger.annotations._
 import javax.ws.rs.Path
 import akka.http.scaladsl.server.Directives
 import akka.http.scaladsl.server.Directives._
@@ -24,6 +24,7 @@ import akka.stream.ActorMaterializer
 import akka.actor.ActorSystem
 
 @Api(value = "/user", description = "Operations about users.", produces = "application/json")
+@Path("/user")
 trait UserHttpService
     extends Directives
     with ModelFormats {

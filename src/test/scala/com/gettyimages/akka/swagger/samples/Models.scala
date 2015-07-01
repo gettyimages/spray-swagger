@@ -15,8 +15,8 @@
  */
 package com.gettyimages.akka.swagger.samples
 
-import com.wordnik.swagger.annotations.ApiModelProperty
-import com.wordnik.swagger.annotations.ApiModel
+import io.swagger.annotations.ApiModelProperty
+import io.swagger.annotations.ApiModel
 import scala.annotation.meta.field
 import org.joda.time.DateTime
 import java.util.Date

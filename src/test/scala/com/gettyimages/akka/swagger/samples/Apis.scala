@@ -15,7 +15,7 @@
  */
 package com.gettyimages.akka.swagger.samples
 
-import com.wordnik.swagger.annotations._
+import io.swagger.annotations._
 import javax.ws.rs.Path
 
 abstract class TestApiWithNoAnnotation

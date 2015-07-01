@@ -15,7 +15,7 @@
  */
 package com.gettyimages.akka.swagger.samples
 
-import com.wordnik.swagger.annotations._
+import io.swagger.annotations._
 import javax.ws.rs.Path
 import akka.http.scaladsl.server.Directives
 import akka.http.scaladsl.server.Directives._
@@ -24,6 +24,7 @@ import akka.stream.ActorMaterializer
 import akka.actor.ActorSystem
 
 @Api(value = "/pet", description = "Operations about pets.", produces = "application/json, application/vnd.test.pet", consumes = "application/json, application/vnd.test.pet")
+@Path("/pet")
 trait PetHttpService
     //extends HttpService with Json4sSupport
     extends Directives

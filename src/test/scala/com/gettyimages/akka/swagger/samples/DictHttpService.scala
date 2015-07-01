@@ -1,6 +1,6 @@
 package com.gettyimages.akka.swagger.samples
 
-import com.wordnik.swagger.annotations._
+import io.swagger.annotations._
 import javax.ws.rs.Path
 import spray.json._
 import akka.http.scaladsl.server.Directives
@@ -10,6 +10,7 @@ import akka.stream.ActorMaterializer
 import akka.actor.ActorSystem
 
 @Api(value = "/dict", description = "This is a dictionary api.")
+@Path("/")
 trait DictHttpService
     extends Directives
     with ModelFormats {
