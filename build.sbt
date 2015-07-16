@@ -13,10 +13,10 @@ resolvers += "Maven" at "https://repo1.maven.org/maven2/"
 checksums in update := Nil
   
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-http-core-experimental" % "1.0-RC4"  withSources(),
-  "com.typesafe.akka" %% "akka-http-spray-json-experimental" % "1.0-RC4"  withSources(),
-  "com.typesafe.akka" %% "akka-http-experimental" % "1.0-RC4"  withSources(),
-  "com.typesafe.akka" %% "akka-http-testkit-experimental" % "1.0-RC4" % "test"  withSources(),
+  "com.typesafe.akka" %% "akka-http-core-experimental" % "1.0"  withSources(),
+  "com.typesafe.akka" %% "akka-http-spray-json-experimental" % "1.0"  withSources(),
+  "com.typesafe.akka" %% "akka-http-experimental" % "1.0"  withSources(),
+  "com.typesafe.akka" %% "akka-http-testkit-experimental" % "1.0" % "test"  withSources(),
   "io.spray"           %% "spray-json"       % "1.3.2" withSources(),
   "io.swagger" % "swagger-scala-module_2.11" % "1.0.0" withSources(),
 //  "io.swagger" % "swagger-annotations" % "1.5.0" withSources(),
