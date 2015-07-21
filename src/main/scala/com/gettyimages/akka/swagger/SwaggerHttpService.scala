@@ -3,11 +3,8 @@ package com.gettyimages.akka.swagger
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
 import scala.reflect.runtime.universe._
-
 import com.gettyimages.akka.swagger.model._
-
 import com.typesafe.scalalogging.LazyLogging
-
 import akka.actor.ActorSystem
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.server.Directives
@@ -18,6 +15,7 @@ import io.swagger.jaxrs.config.ReaderConfig
 import io.swagger.models.Swagger
 import io.swagger.util.Json
 import spray.json.pimpString
+import io.swagger.models.Scheme
 
 /**
  * @author rleibman
@@ -37,12 +35,13 @@ trait SwaggerHttpService extends LazyLogging
   val basePath: String
   val description = ""
   val info: Info = Info()
+  val scheme: Scheme = Scheme.HTTP
   val readerConfig = new ReaderConfig {
     def getIgnoredRoutes(): java.util.Collection[String] = List()
     def isScanAllResources(): Boolean = true
   }
 
-  def swaggerConfig = new Swagger().basePath(basePath).host(host).info(info)
+  def swaggerConfig = new Swagger().basePath(basePath).host(host).info(info).scheme(scheme)
 
   def reader = new Reader(swaggerConfig, readerConfig)
   def swagger = reader.read(apiTypes.map(t ⇒ Class.forName(t.toString())).toSet)
