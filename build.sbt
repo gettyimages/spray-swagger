@@ -4,7 +4,7 @@ organization := "com.gettyimages"
 
 name := "akka-http-swagger"
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.7"
 
 resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
