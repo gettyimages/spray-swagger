@@ -15,12 +15,14 @@
  */
 package com.gettyimages.spray.swagger
 
-import com.wordnik.swagger.annotations._
-import javax.ws.rs.Path
+import io.swagger.annotations._
 import spray.routing.HttpService
 import spray.httpx.Json4sSupport
+import javax.ws.rs.Path
+
 
 @Api(value = "/user", description = "Operations about users.", produces="application/json")
+@Path(value = "/user")
 trait UserHttpService extends HttpService with Json4sSupport {
 
   @ApiOperation(value = "Updated user", notes = "This can only be done by the logged in user.", nickname = "updateUser", httpMethod = "PUT")
