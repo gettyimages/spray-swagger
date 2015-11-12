@@ -21,8 +21,6 @@ import scala.reflect.runtime.universe.Type
 import org.json4s.DefaultFormats
 import org.json4s.Formats
 
-import com.typesafe.scalalogging.LazyLogging
-
 import spray.routing.{ PathMatcher, HttpService, Route }
 import com.wordnik.swagger.model._
 import com.wordnik.swagger.core.util.JsonSerializer
@@ -32,8 +30,7 @@ import spray.http.MediaTypes.`application/json`
 import spray.http.StatusCodes.NotFound
 
 trait SwaggerHttpService
-    extends HttpService
-    with LazyLogging {
+    extends HttpService {
 
   def apiTypes: Seq[Type]
 
