@@ -69,7 +69,7 @@ class SwaggerHttpServiceSpec
           val resp: JValue = responseAs[JValue]
           (resp \ "swagger").extract[String] should equal ("2.0")
           val paths = (resp \ "paths")
-          paths.children.size shouldEqual 3
+          paths.children.size shouldEqual 4
           val petPath = (paths \ "/pet")
           (petPath \ "post" \ "summary").extract[String] shouldEqual "Add a new pet to the store"
           (resp \ "info" \ "version").extract[String] shouldEqual "1.0"
@@ -82,7 +82,8 @@ class SwaggerHttpServiceSpec
           (pet \ "properties" \ "name" \ "type").extract[String] shouldEqual ("string")
           val user = (definitions \ "User")
           (user \ "properties" \ "username" \ "type").extract[String] shouldEqual ("string")
-          val delPetParams = (petPath \ "delete" \ "parameters")
+          val petIdPath = (paths \ "/pet/{petId}")
+          val delPetParams = (petIdPath \ "delete" \ "parameters")
           delPetParams.children should have size (1)
           val petIdOpt = delPetParams.find(pp => {
             (pp \ "name").extract[String] == "petId"

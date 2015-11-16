@@ -17,8 +17,10 @@ package com.gettyimages.spray.swagger
 
 import io.swagger.jaxrs.Reader
 import io.swagger.jaxrs.config.ReaderConfig
+import io.swagger.models.parameters.BodyParameter
 import io.swagger.models.properties.{RefProperty, StringProperty}
-import io.swagger.models.{Operation, Info, Swagger}
+import io.swagger.models._
+import io.swagger.util.Json
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.WordSpec
 import io.swagger.config._
@@ -31,7 +33,8 @@ class SprayApiReaderSpec
 
   val SWAGGER_VERSION = "2.0"
   val API_VERSION = "1.0"
-  val BASE_PATH = "http://www.example-foo.com"
+  val BASE_PATH = "foo"
+  val HOST = "www.example.com"
 
   val swaggerInfo = new Info().version(API_VERSION)
   val readerConfig = new ReaderConfig {
@@ -54,7 +57,10 @@ class SprayApiReaderSpec
     }
 
     "passed a properly annotated HttpService" should {
-      val swaggerConfig = new Swagger().basePath(BASE_PATH).info(swaggerInfo)
+      val swaggerConfig = new Swagger()
+        .host(HOST)
+        .scheme(Scheme.HTTP)
+        .basePath(BASE_PATH).info(swaggerInfo)
       val reader = new Reader(swaggerConfig, readerConfig)
       val swagger: Swagger = reader.read(toJavaTypeSet(Seq(typeOf[DictHttpService])))
 
@@ -68,8 +74,12 @@ class SprayApiReaderSpec
         info.version shouldBe API_VERSION
       }
 
-      "set the basePath as the full url from the config" in {
+      "set the basePath as the relative path from the config" in {
         swagger.getBasePath() shouldBe BASE_PATH
+      }
+
+      "set the host as the host from the config" in {
+        swagger.getHost() shouldBe HOST
       }
 
       "return an ApiListing" in {
@@ -296,6 +306,33 @@ class SprayApiReaderSpec
         val refProp = resp200.getSchema().asInstanceOf[RefProperty]
         refProp.getSimpleRef() should equal ("ListReply")
         // TODO - Needs to encode the ListReply[T] T-Val
+      }
+    }
+
+    "passed a service with a dateTime parameter" should {
+      val swaggerConfig = new Swagger().basePath(BASE_PATH).info(swaggerInfo)
+      val reader = new Reader(swaggerConfig, readerConfig)
+      val swagger: Swagger = reader.read(toJavaTypeSet(Seq(typeOf[TestApiWithDateTime])))
+
+      "define the string data type with format date-time" in {
+        swagger.getPaths() should have size (1)
+        val ops = swagger.getPaths().get("/test").getOperations()
+        ops should have size (1)
+        val params = ops.head.getParameters
+        params should have size (1)
+        val param = params.head
+        val modelOpt = param match {
+          case bp: BodyParameter => Some(bp.getSchema)
+          case _=> None
+        }
+        modelOpt should be ('defined)
+        val miOpt = modelOpt.get match {
+          case mi: ModelImpl => Some(mi)
+          case _ => None
+        }
+        miOpt should be ('defined)
+        miOpt.get.getType should equal ("string")
+        miOpt.get.getFormat should equal ("date-time")
       }
     }
   }

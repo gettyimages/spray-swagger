@@ -22,7 +22,7 @@ libraryDependencies ++= Seq(
   "io.spray" %% "spray-routing" % "1.3.3",
   "io.spray" %% "spray-testkit" % "1.3.3" % "test",
   "io.spray" %% "spray-json" % "1.3.2",
-  "io.swagger" %% "swagger-scala-module" % "1.0.1-CYAN" withSources(),
+  "io.swagger" %% "swagger-scala-module" % "1.0.0" withSources(),
   "io.swagger" % "swagger-core" % "1.5.4" withSources(),
   "io.swagger" % "swagger-annotations" % "1.5.4" withSources(),
   "io.swagger" % "swagger-models" % "1.5.4" withSources(),

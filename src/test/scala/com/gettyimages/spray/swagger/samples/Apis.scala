@@ -97,3 +97,15 @@ abstract class TestApiWithResponseContainer extends HttpService {
     responseContainer = "com.gettyimages.spray.swagger.ListReply")
   def testOperation
 }
+
+@Api(value = "/test")
+@Path("/test")
+abstract class TestApiWithDateTime extends HttpService {
+  @ApiOperation(value = "testApiOperation", httpMethod = "GET")
+  @ApiImplicitParams(Array(new ApiImplicitParam(name = "test",
+    value = "test param",
+    dataType = "dateTime",
+    paramType = "body")))
+  def testOperation
+}
+

@@ -1,6 +1,9 @@
 package com.gettyimages.spray.swagger
 
+import org.json4s.JObject
+import org.json4s.jackson.Serialization
 import spray.http.MediaTypes
+import spray.httpx.Json4sJacksonSupport
 import scala.collection.JavaConversions._
 import com.gettyimages.spray.swagger.model._
 import com.typesafe.scalalogging.LazyLogging
@@ -19,7 +22,7 @@ import scala.reflect.runtime.universe.Type
  * @author rleibman
  */
 
-trait SwaggerHttpService extends HttpService with LazyLogging {
+trait SwaggerHttpService extends HttpService with LazyLogging with Json4sJacksonSupport {
   val apiTypes: Seq[Type]
   val host: String
   val basePath: String
@@ -38,12 +41,21 @@ trait SwaggerHttpService extends HttpService with LazyLogging {
     Class.forName(getClassNameForType(t))
   }).toSet)
 
+  override def json4sJacksonFormats = org.json4s.DefaultFormats
+
   def toJsObject(s: Swagger): JsObject ={
     val result = Json.mapper()
-      .writeValueAsString(swagger)
+      .writeValueAsString(s)
       .parseJson
       .asJsObject
     result
+  }
+
+  def toJObject(s: Swagger): JObject ={
+    implicit val fmts = org.json4s.DefaultFormats
+    val jString = toJsObject(s).compactPrint
+    val jObj = Serialization.read[JObject](jString)
+    jObj
   }
 
   lazy val routes: Route = get {
@@ -52,7 +64,7 @@ trait SwaggerHttpService extends HttpService with LazyLogging {
     pathPrefix(basePath) {
       path("swagger.json") {
         respondWithMediaType(`application/json`) {
-          complete(toJsObject(swagger).compactPrint)
+          complete(toJObject(swagger))
         }
       }
     }

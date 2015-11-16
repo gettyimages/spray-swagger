@@ -28,6 +28,7 @@ import spray.httpx.Json4sSupport
 trait PetHttpService extends HttpService with Json4sSupport {
 
 
+  @Path(value = "{petId}")
   @ApiOperation(value = "Find a pet by ID", notes = "Returns a pet based on ID", httpMethod = "GET", response = classOf[Pet])
   @ApiImplicitParams(Array(
     new ApiImplicitParam(name = "petId", value = "ID of pet that needs to be fetched", required = true, dataType = "integer", paramType = "path", allowableValues="[1,100000]")
@@ -60,6 +61,7 @@ trait PetHttpService extends HttpService with Json4sSupport {
     complete(id)
   }}
 
+  @Path(value = "{petId}")
   @ApiOperation(value = "Updates a pet in the store with form data.", notes = "", nickname = "updatePetWithForm", httpMethod = "POST", consumes="application/json")
   @ApiImplicitParams(Array(
     new ApiImplicitParam(name = "petId", value = "ID of pet that needs to be updated", required = true, dataType = "string", paramType = "path"),
@@ -73,6 +75,7 @@ trait PetHttpService extends HttpService with Json4sSupport {
     complete("ok")
   }}}}
 
+  @Path(value = "{petId}")
   @ApiOperation(value = "Deletes a pet", nickname="deletePet", httpMethod = "DELETE")
   @ApiImplicitParams(Array(
     new ApiImplicitParam(name = "petId", value = "Pet id to delete", required = true, paramType="path")
