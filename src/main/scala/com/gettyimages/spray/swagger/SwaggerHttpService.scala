@@ -22,7 +22,7 @@ import scala.reflect.runtime.universe.Type
  * @author rleibman
  */
 
-trait SwaggerHttpService extends HttpService with LazyLogging with Json4sJacksonSupport {
+trait SwaggerHttpService extends HttpService with Json4sJacksonSupport {
   val apiTypes: Seq[Type]
   val host: String
   val basePath: String
