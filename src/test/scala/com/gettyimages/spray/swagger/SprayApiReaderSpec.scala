@@ -335,5 +335,19 @@ class SprayApiReaderSpec
         miOpt.get.getFormat should equal ("date-time")
       }
     }
+
+    "passed a service with an ApiResponse" should {
+      val swaggerConfig = new Swagger().basePath(BASE_PATH).info(swaggerInfo)
+      val reader = new Reader(swaggerConfig, readerConfig)
+      val swagger: Swagger = reader.read(toJavaTypeSet(Seq(typeOf[TestApiWithApiResponse])))
+
+      "define the operation" in {
+        swagger.getPaths() should have size (1)
+        val ops = swagger.getPaths().get("/test").getOperations()
+        ops should have size (1)
+        val resp200 = ops.head.getResponses().get("200")
+        resp200 should not be (null)
+      }
+    }
   }
 }

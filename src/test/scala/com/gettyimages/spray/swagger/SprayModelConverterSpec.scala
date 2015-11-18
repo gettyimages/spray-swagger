@@ -96,23 +96,12 @@ class SprayModelConverterSpec
         items.get$ref() should equal ("#/definitions/TestModelNode")
         items.getSimpleRef() should equal ("TestModelNode")
         val testModelNode = schemas.get("TestModelNode")
-        // TODO - Option[String] is an array?  Is that Swaggered correctly?
         val value = testModelNode.getProperties().get("value")
-        value.getType() should equal ("array")
-        value.asInstanceOf[ArrayProperty].getItems().getType() should equal ("string")
+        // NOTE using stock swagger-scala-module at this point
+        // will have this as an array instead of a string.
+        // swagger-api/swagger-scala-module Pull Request #9 addresses this
+        value.getType() should equal ("string")
       }
     }
-    /* TODO - Look further at Custom Models
-    val customModel = new ModelImpl().name("CustomType")
-    val converters = List[ModelConverter]().asJava
-    val customModelConverter = new ModelConverterContextImpl(converters)
-    customModelConverter.defineModel("CustomType", customModel)
-    ModelConverters.getInstance().addConverter(customModelConverter)
-    import com.gettyimages.spray.swagger.samples.CustomModelConverter
-
-    ModelConverters.getInstance().addConverter(new CustomModelConverter())
-
-    ModelConverters.getInstance().addClassToSkip("CustomType")
-    */
   }
 }

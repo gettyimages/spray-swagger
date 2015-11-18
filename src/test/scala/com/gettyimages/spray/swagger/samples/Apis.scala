@@ -109,3 +109,25 @@ abstract class TestApiWithDateTime extends HttpService {
   def testOperation
 }
 
+@Api(value = "/test")
+@Path("/test")
+abstract class TestApiWithApiResponse extends HttpService {
+  @ApiOperation(value = "testApiOperation",
+    httpMethod = "GET",
+    // code = 201,
+    response = classOf[Pet])
+  @ApiImplicitParams(Array(new ApiImplicitParam(name = "test",
+    value = "test param",
+    dataType = "dateTime",
+    paramType = "body"
+  )))
+  @ApiResponses(Array(
+    new ApiResponse(code = 1,
+      message = "Successful",
+      response = classOf[Pet]),
+    new ApiResponse(code = 500,
+      message = "Internal Server Error")
+  ))
+  def testOperation
+}
+
