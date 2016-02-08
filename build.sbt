@@ -2,25 +2,32 @@ import sbtrelease.ReleasePlugin.ReleaseKeys._
 
 organization := "com.gettyimages"
 
-name := "spray-swagger"
+name := "akka-http-swagger"
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.7"
 
+resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+
+resolvers += "Maven" at "https://repo1.maven.org/maven2/"
+
+checksums in update := Nil
+  
 libraryDependencies ++= Seq(
-  "io.spray" %% "spray-routing" % "1.3.3",
-  "io.spray" %% "spray-testkit" % "1.3.3" % "test",
-  "org.scalatest" %% "scalatest" % "2.2.4" % "test" ,
-  "com.wordnik" %% "swagger-core" % "1.3.12" excludeAll( ExclusionRule(organization = "org.json4s"),  ExclusionRule(organization="org.fasterxml*") ),
-  "com.typesafe.akka" %% "akka-actor" % "2.3.9",
-  "org.json4s" %% "json4s-jackson" % "3.2.11",
-  "org.json4s" %% "json4s-native" % "3.2.11",
-  "joda-time" % "joda-time" % "2.7",
-  "org.joda" % "joda-convert" % "1.7",
+  "com.typesafe.akka" %% "akka-http-core-experimental" % "2.0.3"  withSources(),
+  "com.typesafe.akka" %% "akka-http-spray-json-experimental" % "2.0.3"  withSources(),
+  "com.typesafe.akka" %% "akka-http-experimental" % "2.0.3"  withSources(),
+  "com.typesafe.akka" %% "akka-http-testkit-experimental" % "2.0.3" % "test"  withSources(),
+  "io.spray"           %% "spray-json"       % "1.3.2" withSources(),
+  "io.swagger" % "swagger-scala-module_2.11" % "1.0.1" withSources(),
+  "io.swagger" % "swagger-jaxrs" % "1.5.7" withSources(),
+  "org.scalatest" %% "scalatest" % "2.2.6" % "test" ,
+  "org.json4s" %% "json4s-jackson" % "3.3.0",
+  "org.json4s" %% "json4s-native" % "3.3.0",
+  "joda-time" % "joda-time" % "2.9.2",
+  "org.joda" % "joda-convert" % "1.8.1",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
   "javax.ws.rs" % "jsr311-api" % "1.1.1"
 )
-
-resolvers += "spray repo" at "http://repo.spray.io"
 
 releaseSettings
 
@@ -44,7 +51,7 @@ pomIncludeRepository := { _ => false }
 
 parallelExecution in Test := false
 
-homepage := Some(url("https://github.com/gettyimages/spray-swagger"))
+homepage := Some(url("https://github.com/gettyimages/akka-http-swagger"))
 
 licenses := Seq("The Apache Software License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 
@@ -54,8 +61,8 @@ publishArtifactsAction := PgpKeys.publishSigned.value
 
 pomExtra := (
   <scm>
-    <url>git@github.com:gettyimages/spray-swagger.git</url>
-    <connection>scm:git:git@github.com:gettyimages/spray-swagger.git</connection>
+    <url>git@github.com:gettyimages/akka-http-swagger.git</url>
+    <connection>scm:git:git@github.com:gettyimages/akka-http-swagger.git</connection>
   </scm>
   <developers>
     <developer>
@@ -69,3 +76,8 @@ pomExtra := (
       <url>http://parascal.com</url>
     </developer>
   </developers>)
+
+publishTo := Some("Artifactory Realm" at "https://artifactory.gluware.com:8443/artifactory/glue-infastructure/")
+
+credentials += Credentials(Path.userHome / ".artifactory_credentials")
+  

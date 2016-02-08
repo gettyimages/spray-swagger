@@ -13,41 +13,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.gettyimages.spray.swagger
+package com.gettyimages.akka.swagger.samples
 
-import com.wordnik.swagger.annotations._
+import io.swagger.annotations._
 import javax.ws.rs.Path
-import spray.routing.HttpService
-import spray.httpx.Json4sSupport
+import akka.http.scaladsl.server.Directives
+import akka.http.scaladsl.server.Directives._
+import spray.json.DefaultJsonProtocol
+import akka.stream.ActorMaterializer
+import akka.actor.ActorSystem
 
-@Api(value = "/user", description = "Operations about users.", produces="application/json")
-trait UserHttpService extends HttpService with Json4sSupport {
-
+@Api(value = "/user", description = "Operations about users.", produces = "application/json")
+@Path("/user")
+trait UserHttpService
+    extends Directives
+    with ModelFormats {
+  implicit val actorSystem = ActorSystem("mysystem")
+  implicit val materializer = ActorMaterializer()
+  import actorSystem.dispatcher
   @ApiOperation(value = "Updated user", notes = "This can only be done by the logged in user.", nickname = "updateUser", httpMethod = "PUT")
   @ApiImplicitParams(Array(
     new ApiImplicitParam(name = "username", value = "ID of user that needs to be updated", required = true, dataType = "string", paramType = "path"),
-    new ApiImplicitParam(name = "body", value = "Updated user object.", required = false, dataType = "string", paramType = "form")
-  ))
+    new ApiImplicitParam(name = "body", value = "Updated user object.", required = false, dataType = "string", paramType = "form")))
   @ApiResponses(Array(
     new ApiResponse(code = 404, message = "User not found"),
-    new ApiResponse(code = 400, message = "Invalid username supplied")
-  ))
-  def readRoute = put { path("/user" / Segment) { id =>
-    complete(id)
-  }}
+    new ApiResponse(code = 400, message = "Invalid username supplied")))
+  def readRoute = put {
+    path("/user" / Segment) { id ⇒
+      complete(id)
+    }
+  }
 
-  @ApiOperation(value = "Get user by name", notes = "", response=classOf[User], nickname = "getUserByName", httpMethod = "GET")
+  @ApiOperation(value = "Get user by name", notes = "", response = classOf[User], nickname = "getUserByName", httpMethod = "GET")
   @ApiImplicitParams(Array(
     new ApiImplicitParam(name = "userId", value = "ID of user that needs to be updated", required = true, dataType = "string", paramType = "path"),
     new ApiImplicitParam(name = "name", value = "Updated name of the user.", required = false, dataType = "string", paramType = "form"),
-    new ApiImplicitParam(name = "status", value = "Updated status of the user.", required = false, dataType = "string", paramType = "form")
-  ))
+    new ApiImplicitParam(name = "status", value = "Updated status of the user.", required = false, dataType = "string", paramType = "form")))
   @ApiResponses(Array(
-    new ApiResponse(code = 404, message = "User does not exist.")
-  ))
-  def getUser = post { path("/user" / Segment) { id => { formFields('name, 'status) { (name, status) =>
-    complete("ok")
-  }}}}
+    new ApiResponse(code = 404, message = "User does not exist.")))
+  def getUser = post {
+    path("/user" / Segment) { id ⇒
+      {
+        formFields('name, 'status) { (name, status) ⇒
+          complete("ok")
+        }
+      }
+    }
+  }
 
 }
 case class User(username: String, status: String)

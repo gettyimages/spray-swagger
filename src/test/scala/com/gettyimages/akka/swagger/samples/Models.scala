@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.gettyimages.spray.swagger
+package com.gettyimages.akka.swagger.samples
 
-import com.wordnik.swagger.annotations.ApiModelProperty
-import com.wordnik.swagger.annotations.ApiModel
+import io.swagger.annotations.ApiModelProperty
+import io.swagger.annotations.ApiModel
 import scala.annotation.meta.field
 import org.joda.time.DateTime
 import java.util.Date
@@ -39,9 +39,7 @@ object SwaggerModelBuilderSpecValues {
 case class DictEntry(
   val key: String,
   val value: String,
-  val expire: Option[Long]
-  )
-
+  val expire: Option[Long])
 
 import SwaggerModelBuilderSpecValues._
 
@@ -60,45 +58,27 @@ sealed trait TestModelParent {
 
 @ApiModel(description = TestModelDescription)
 case class TestModel(
-  @(ApiModelProperty @field)(value = NameDescription)
-  name: String,
-  @(ApiModelProperty @field)(value = CountDescription)
-  count: Int,
-  @(ApiModelProperty @field)(value = IsStaleDescription)
-  isStale: Boolean,
-  @(ApiModelProperty @field)(value = OffsetDescription)
-  offset: Option[Int] = None,
-  @(ApiModelProperty @field)(value = NodesDescription)
-  nodes: List[TestModelNode] = List[TestModelNode](),
-  @(ApiModelProperty @field)(value = EnumDescription)
-  enum: TestEnum.TestEnum = TestEnum.AEnum,
-  @(ApiModelProperty @field)(value = StartDateDescription)
-  startDate: Date,
-  @(ApiModelProperty @field)(value = EndDateDescription)
-  endDate: DateTime,
+  @(ApiModelProperty @field)(value = NameDescription) name: String,
+  @(ApiModelProperty @field)(value = CountDescription) count: Int,
+  @(ApiModelProperty @field)(value = IsStaleDescription) isStale: Boolean,
+  @(ApiModelProperty @field)(value = OffsetDescription) offset: Option[Int] = None,
+  @(ApiModelProperty @field)(value = NodesDescription) nodes: List[TestModelNode] = List[TestModelNode](),
+  @(ApiModelProperty @field)(value = EnumDescription) enum: TestEnum.TestEnum = TestEnum.AEnum,
+  @(ApiModelProperty @field)(value = StartDateDescription) startDate: Date,
+  @(ApiModelProperty @field)(value = EndDateDescription) endDate: DateTime,
   noAnnotationProperty: String,
   secondNoAnnotationProperty: String,
-  @(ApiModelProperty @field)(value = AllowableDescription, allowableValues="first, second") allowable: String
-) extends TestModelParent
+  @(ApiModelProperty @field)(value = AllowableDescription, allowableValues = "first, second") allowable: String) extends TestModelParent
 
 @ApiModel(description = TestModelDescription)
 case class ModelWithCustomPropertyDatatypes(
-  @(ApiModelProperty @field)(value = CountDescription, dataType = "long")
-  count: BigInt,
-  @(ApiModelProperty @field)(value = IsStaleDescription, dataType = "boolean")
-  isStale: Any,
-  @(ApiModelProperty @field)(value = OffsetDescription, dataType = "array[int]")
-  offset: Iterable[(Int, Boolean)],
-  @(ApiModelProperty @field)(value = EndDateDescription, dataType = "date", required = false)
-  endDate: Option[String],
-  @(ApiModelProperty @field)(value = NameDescription, dataType = "CustomType", required = false)
-  nonDefaultTypeField: Option[String],
-  @(ApiModelProperty @field)(value = NameDescription, dataType = "CustomContainer[string]", required = false)
-  nonDefaultContainerTypeField: Option[String],
-  @(ApiModelProperty @field)(value = AmountDescription, dataType="BigDecimal")
-  amount: BigDecimal
-  )
-
+  @(ApiModelProperty @field)(value = CountDescription, dataType = "long") count: BigInt,
+  @(ApiModelProperty @field)(value = IsStaleDescription, dataType = "boolean") isStale: Any,
+  @(ApiModelProperty @field)(value = OffsetDescription, dataType = "array[int]") offset: Iterable[(Int, Boolean)],
+  @(ApiModelProperty @field)(value = EndDateDescription, dataType = "date", required = false) endDate: Option[String],
+  @(ApiModelProperty @field)(value = NameDescription, dataType = "CustomType", required = false) nonDefaultTypeField: Option[String],
+  @(ApiModelProperty @field)(value = NameDescription, dataType = "CustomContainer[string]", required = false) nonDefaultContainerTypeField: Option[String],
+  @(ApiModelProperty @field)(value = AmountDescription, dataType = "BigDecimal") amount: BigDecimal)
 
 @ApiModel(description = "ModelBase")
 class ModelBase {
@@ -112,7 +92,6 @@ class ModelExtension extends ModelBase {
   val date: Date = DateTime.now().toDate
 }
 
-
 object TestEnum extends Enumeration {
   type TestEnum = Value
   val AEnum = Value("a")
@@ -121,15 +100,13 @@ object TestEnum extends Enumeration {
 
 @ApiModel
 case class TestModelNode(
-  value: Option[String]
-  )
+  value: Option[String])
 
 case class A() extends Letter
 case class B() extends Letter
 
 @ApiModel(
-  subTypes = Array(classOf[String], classOf[B])
-  )
+  subTypes = Array(classOf[String], classOf[B]))
 abstract class Letter
 
 @ApiModel
@@ -137,5 +114,4 @@ case class TestModelPositions(
   @(ApiModelProperty @field)(position = 0, value = "") arg0: String,
   @(ApiModelProperty @field)(position = 1, value = "") arg1: String,
   @(ApiModelProperty @field)(position = 2, value = "") arg2: String,
-  @(ApiModelProperty @field)(position = 3, value = "") arg3: String
-  )
+  @(ApiModelProperty @field)(position = 3, value = "") arg3: String)

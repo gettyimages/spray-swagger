@@ -1,28 +1,28 @@
-# spray-swagger
+# akka-http-swagger
 
-Spray-Swagger brings [Swagger](https://github.com/wordnik/swagger-core) support for [Spray](http://spray.io) Apis. The included ```SwaggerHttpService``` route will inspect Scala types with Swagger annotations and build a swagger compliant endpoint for a [swagger compliant ui](https://github.com/wordnik/swagger-ui).
+akka-http-swagger brings [Swagger](https://github.com/wordnik/swagger-core) support for [Akka HTTP](http://doc.akka.io/docs/akka-stream-and-http-experimental/current/) Apis. The included ```SwaggerHttpService``` route will inspect Scala types with Swagger annotations and build a swagger compliant endpoint for a [swagger compliant ui](https://github.com/wordnik/swagger-ui).
 
 The swagger spec [swagger spec](https://github.com/wordnik/swagger-spec/blob/master/versions/1.2.md) is helpful for understanding the swagger api and resource declaration semantics behind swagger-core annotations.
 
-## Getting Spray-Swagger
+## Getting akka-http-Swagger
 
 ### Release Version
 
-The jars are hosted on [sonatype](https://oss.sonatype.org) and mirrored to Maven Central. As of version 0.5.1, spray-swagger is built against scala 2.11.6 and is no longer cross compiled. Snapshot releases are also hosted on sonatype. 
+The jars are hosted on [sonatype](https://oss.sonatype.org) and mirrored to Maven Central. As of version 0.5.1, akka-http-swagger is built against scala 2.11.6 and is no longer cross compiled. Snapshot releases are also hosted on sonatype. 
 
 ```
-libraryDependencies += "com.gettyimages" %% "spray-swagger" % "0.5.1"
+libraryDependencies += "com.gettyimages" %% "akka-http-swagger" % "0.5.1"
 ```
 
 ## Examples
 
-[mhamrah/spray-swagger-sample](https://github.com/mhamrah/spray-swagger-sample) is a spray api project with spray-swagger support and a Swagger UI.
+[mhamrah/akka-http-swagger-sample](https://github.com/mhamrah/akka-http-swagger-sample) is a akka http api project with akka-http-swagger support and a Swagger UI.
 
-The ```/test``` directory includes an ```HttpSwaggerServiceSpec``` which leverages ```spray.testkit``` to test the API. It uses a ```PetHttpService``` and ```UserHttpService``` declared in the ```/samples``` folder. 
+The ```/test``` directory includes an ```HttpSwaggerServiceSpec``` which leverages ```akka.http.testkit``` to test the API. It uses a ```PetHttpService``` and ```UserHttpService``` declared in the ```/samples``` folder. 
 
 ## SwaggerHttpService
 
-The ```SwaggerHttpService``` is a trait extending Spray's ```HttpService```. It will generate the appropriate Swagger json schema based on a set of inputs declaring your Api and the types you want to expose.
+The ```SwaggerHttpService``` is a trait extending Akka's ```HttpService```. It will generate the appropriate Swagger json schema based on a set of inputs declaring your Api and the types you want to expose.
 
 The  ```SwagerHttpService``` will contain a ```routes``` property you can concatenate along with your existing spray routes. This will expose an endpoint at ```<baseUrl>/<specPath>/<resourcePath>``` with the specified ```apiVersion```, ```swaggerVersion``` and resource listing.
 
@@ -81,7 +81,7 @@ trait PetHttpService extends HttpService {
 }
 ```
 
-Notice the use of ```ApiImplicitParams```. This is the best way to apply parameter information. The ```paramType``` can be used to specify ```path```, ```body```, ```header```, ```query``` or ```form```. If the dataType value is not of the basic types, ```spray-swagger``` will try and find the type in the ```modelTypes``` sequence. Refer to *swagger-core* for other attribute information.
+Notice the use of ```ApiImplicitParams```. This is the best way to apply parameter information. The ```paramType``` can be used to specify ```path```, ```body```, ```header```, ```query``` or ```form```. If the dataType value is not of the basic types, ```akka-http-swagger``` will try and find the type in the ```modelTypes``` sequence. Refer to *swagger-core* for other attribute information.
 
 ### Model Definitions
 
