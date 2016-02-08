@@ -11,19 +11,6 @@ import io.swagger.models.{
  * @author rleibman
  */
 package object model {
-  case class Contact(name: String, url: String, email: String)
-
-  case class License(name: String, url: String)
-
-  case class Info(
-    description: String = "",
-    version: String = "",
-    title: String = "",
-    termsOfService: String = "",
-    contact: Option[Contact] = None,
-    license: Option[License] = None,
-    vendorExtensions: Map[String, Object] = Map())
-
   implicit def swagger2scala(convertMe: SwaggerContact): Option[Contact] = {
     if (convertMe == null) None else Some(Contact(convertMe.getName, convertMe.getUrl, convertMe.getEmail))
   }
