@@ -45,7 +45,9 @@ trait SwaggerHttpService
   def apiInfo: Option[ApiInfo] = None
   def authorizations: List[AuthorizationType] = List()
 
-  private val api =
+  protected val api: SwaggerApiBuilder = buildApi
+
+  protected def buildApi: SwaggerApiBuilder =
     new SwaggerApiBuilder(
       new SwaggerConfig(
         apiVersion,
