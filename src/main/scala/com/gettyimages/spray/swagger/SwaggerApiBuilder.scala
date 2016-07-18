@@ -31,10 +31,17 @@ class SwaggerApiBuilder(
 ) extends ReaderUtil
     with LazyLogging {
 
-  val scanner = new SprayApiScanner(apiTypes)
-  val reader = new SprayApiReader()
+  val scanner = buildScanner
 
-  val listings: Map[String, ApiListing] = {
+  val reader = buildReader
+
+  val listings: Map[String, ApiListing] = buildListings
+
+  protected def buildScanner: SprayApiScanner = new SprayApiScanner(apiTypes)
+
+  protected def buildReader: SprayApiReader = new SprayApiReader()
+
+  protected def buildListings: Map[String, ApiListing] = {
     logger.info("loading api metadata")
     val classes = scanner match {
       case scanner: Scanner => scanner.classes()
