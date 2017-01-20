@@ -112,7 +112,7 @@ class SwaggerHttpServiceSpec
           val definitions = (resp \ "definitions")
 
           // Includes Function1RequestContextBoxedUnit which is an error at some level
-          definitions.children.size shouldEqual (4)
+          definitions.children.size shouldEqual 5
           val pet = (definitions \ "Pet")
           (pet \ "properties" \ "name" \ "type").extract[String] shouldEqual "string"
           val user = (definitions \ "User")
@@ -121,10 +121,10 @@ class SwaggerHttpServiceSpec
           val delPetParams = (petIdPath \ "delete" \ "parameters")
           delPetParams.children should have size (1)
           val petIdOpt = delPetParams.find(pp => {
-            (pp \ "name").extract[String] == "petId"
+            (pp \ "name").extract[List[String]] === List("petId")
           })
           petIdOpt should be ('defined)
-          (petIdOpt.get \ "in").extract[String] shouldEqual "path"
+          (petIdOpt.get \ "in").extract[List[String]] shouldEqual List("path")
 
           // Check for the owner sub-resource
           val ownerPath = (paths \ "/pet/{petId}/owner")

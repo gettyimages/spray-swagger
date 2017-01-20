@@ -2,7 +2,9 @@ organization := "com.github.swagger-spray"
 
 name := "swagger-spray"
 
-EclipseKeys.withSource := true
+//EclipseKeys.withSource := true
+
+resolvers += Resolver.sonatypeRepo("releases")
 
 coverageHighlighting := {
   if (scalaBinaryVersion.value == "2.10") false
@@ -11,21 +13,26 @@ coverageHighlighting := {
 
 scalaVersion := "2.11.8"
 
+val swaggerVersion = "1.5.12"
+val jacksonVersion = "2.8.6"
+
 checksums in update := Nil
 
 libraryDependencies ++= Seq(
   "io.spray" %% "spray-routing" % "1.3.4",
   "io.spray" %% "spray-testkit" % "1.3.4" % "test",
-  "io.spray" %% "spray-json" % "1.3.2",
+  "io.spray" %% "spray-json" % "1.3.3",
   "com.typesafe.akka" %% "akka-actor" % "2.3.11",
-  "io.swagger" %% "swagger-scala-module" % "1.0.2",
-  "io.swagger" % "swagger-core" % "1.5.10",
-  "io.swagger" % "swagger-annotations" % "1.5.10",
-  "io.swagger" % "swagger-models" % "1.5.10",
-  "io.swagger" % "swagger-jaxrs" % "1.5.10",
+  "io.swagger" %% "swagger-scala-module" % "1.0.3",
+  "io.swagger" % "swagger-core" % swaggerVersion,
+  "io.swagger" % "swagger-annotations" % swaggerVersion,
+  "io.swagger" % "swagger-models" % swaggerVersion,
+  "io.swagger" % "swagger-jaxrs" % swaggerVersion,
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion,
+  "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % jacksonVersion,
   "org.scalatest" %% "scalatest" % "3.0.1" % "test" ,
-  "org.json4s" %% "json4s-jackson" % "3.2.11" % "test",
-  "org.json4s" %% "json4s-native" % "3.2.11" % "test",
+  "org.json4s" %% "json4s-jackson" % "3.5.0" % "test",
+  "org.json4s" %% "json4s-native" % "3.5.0" % "test",
   "joda-time" % "joda-time" % "2.8" % "test",
   "org.joda" % "joda-convert" % "1.7" % "test"
 )

@@ -16,8 +16,10 @@ The  [Swagger Spec](http://swagger.io/specification/) is helpful for understandi
 The jars are hosted on [sonatype](https://oss.sonatype.org) and mirrored to Maven Central. Swagger-spray is built against Scala 2.11. Up to v0.7.2, we also built for Scala 2.10. Snapshot releases are also hosted on sonatype. 
 
 ```
-libraryDependencies += "com.github.swagger-spray" %% "swagger-spray" % "0.7.4"
+libraryDependencies += "com.github.swagger-spray" %% "swagger-spray" % "0.8.0"
 ```
+
+Swagger libraries depend heavily on [Jackson](http://wiki.fasterxml.com/JacksonHome). If you need to older versions of Jackson, consider using swagger-spray 0.7.4. It depends on Jackson 2.4.
 
 ## Examples
 
